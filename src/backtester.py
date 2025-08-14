@@ -132,10 +132,10 @@ class Backtester():
             portfolios = historical_portfolios[model.name]
             backtest = portfolios.reindex(self.asset_prices.index)
             backtest = backtest.fillna(method='ffill').dropna()
+            backtest /= 100  # Convert portfolio weights from percentage to fractional
             returns = self.asset_prices.pct_change()
             returns = returns.reindex(backtest.index)
             backtest *= returns
-            backtest /= 100
             backtest = backtest.sum(axis=1)
             backtest.iloc[0] = 0
             backtest += 1

@@ -16,3 +16,15 @@ backtester = Backtester(
                         features=features)
 
 backtests = backtester.run_backtests()
+
+# Print the results
+for model_name, results in backtests.items():
+    print(f"--- Results for {model_name} ---")
+    print("Performance Metrics:")
+    print(f"  Annualized Return: {results['annualized_return']:.2%}")
+    print(f"  CVaR (Ex-post): {results['cvar_expost']:.2%}")
+    print(f"  Mean HHI: {results['mean_hhi']:.4f}")
+    print(f"  Mean Rotation: {results['mean_rotation']:.4f}")
+    print("\nAsset Allocations (Portfolios):")
+    print(results['portfolios'])
+    print("\n")

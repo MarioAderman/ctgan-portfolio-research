@@ -1,0 +1,3 @@
+The latest version uses no more Tabular folder containing CTGAN, it uses Single Table instead.
+
+Hash from v0.18.0: bd3ed8e

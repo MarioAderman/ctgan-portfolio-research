@@ -30,5 +30,5 @@
     ],
     "sample_size": 500,
     "lookback_years": 5,
-    "returns_timeframe": 365
+    "returns_timeframe": 1
 }

@@ -153,7 +153,7 @@ class Backtester():
             serie = backtests[model.name]['total_return_serie']
             portfolios = backtests[model.name]['portfolios']
             backtests[model.name]['annualized_return'] = compute_annualized_return(serie)
-            backtests[model.name]['cvar_expost'] = compute_cvar(serie)
+            backtests[model.name]['cvar_expost'] = compute_cvar(serie, tf=self.config['returns_timeframe'])
             backtests[model.name]['mean_hhi'] = compute_mean_hhi(portfolios)
             backtests[model.name]['mean_rotation'] = compute_mean_rotation(portfolios)
         

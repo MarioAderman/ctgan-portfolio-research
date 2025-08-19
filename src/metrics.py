@@ -6,7 +6,12 @@ def compute_annualized_return(serie):
     '''
     Calculates the annualized return of a serie.
     '''
-    annualized_return = (((serie.iloc[-1]/serie.iloc[0])**(365/(len(serie))))-1)*100
+    total_return = (serie.iloc[-1]/serie.iloc[0]) - 1  # Total return over period
+    # Calculate actual years elapsed (not just number of observations)
+    start_date = serie.index[0]
+    end_date = serie.index[-1]
+    years_elapsed = (end_date - start_date).days / 365.25  # Account for leap years
+    annualized_return = ((1 + total_return)**(1/years_elapsed) - 1) * 100
     return annualized_return
 
 def compute_cvar(serie, alpha=0.95, tf=365):

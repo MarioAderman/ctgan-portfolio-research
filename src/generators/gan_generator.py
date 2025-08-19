@@ -22,7 +22,7 @@ class CTGANGenerator():
         self.params = params if params else {'embedding_dim': 128,
                            'generator_dim': (256, 256),
                            'discriminator_dim': (256, 256),
-                           'epochs': 1500,
+                           'epochs': 10,
                            'generator_lr': 1e-4,
                            'discriminator_lr': 1e-4}
 

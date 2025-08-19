@@ -1,12 +1,13 @@
 {
     "generate_multiple_backstests": false,
     "model_names": [
-        "historical"
+        "historical",
+        "CTGAN"
             ],
     "assets_path": "./src/data/asset_prices.csv",
     "features_path": "./src/data/features.csv",
     "plot_3d_points": false,
-    "create_visualizations": true,
+    "create_visualizations": false,
     "read_backtest": false,
     "read_samples": false,
     "use_features": true,
@@ -29,7 +30,7 @@
         0.15,
         0.2
     ],
-    "sample_size": 500,
-    "lookback_years": 5,
-    "returns_timeframe": 1
+    "sample_size": 100,
+    "lookback_years": 3,
+    "returns_timeframe": 365
 }

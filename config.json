@@ -6,6 +6,7 @@
     "assets_path": "./src/data/asset_prices.csv",
     "features_path": "./src/data/features.csv",
     "plot_3d_points": false,
+    "create_visualizations": true,
     "read_backtest": false,
     "read_samples": false,
     "use_features": true,

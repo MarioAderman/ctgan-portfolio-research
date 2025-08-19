@@ -4,6 +4,7 @@ import json
 # Local application imports
 from src.backtester import Backtester
 from src.utils import load_data
+from src.visualization import PortfolioVisualizer
 
 config = json.load(open("./config.json"))
 asset_prices, asset_returns, features, rebalance_dates = load_data(config)
@@ -28,3 +29,17 @@ for model_name, results in backtests.items():
     print("\nAsset Allocations (Portfolios):")
     print(results['portfolios'])
     print("\n")
+
+# Create visualizations if enabled
+if config.get('create_visualizations', False):
+    print("\n" + "="*60)
+    print("CREATING PORTFOLIO VISUALIZATIONS")
+    print("="*60)
+
+    asset_names = asset_prices.columns.tolist()
+    visualizer = PortfolioVisualizer(backtests, asset_names)
+
+    # Create comprehensive dashboard
+    visualizer.create_summary_dashboard(save_path="./charts")
+else:
+    print("\n📊 Visualizations disabled in config.json")

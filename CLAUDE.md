@@ -10,7 +10,7 @@ This is a research project exploring portfolio optimization using CTGAN (Conditi
 
 ```bash
 # Activate the project-specific conda environment
-conda activate ctgan-portfolio
+zsh -c "source ~/.zshrc && conda activate ctgan-portfolio"
 ```
 
 ## Core Architecture
@@ -49,8 +49,7 @@ The `config.json` file controls all aspects of the experiment:
 
 ```bash
 # Activate environment and run the main backtest
-conda activate ctgan-portfolio
-python main.py
+zsh -c "source ~/.zshrc && conda activate ctgan-portfolio && python main.py"
 ```
 
 ## Development Notes

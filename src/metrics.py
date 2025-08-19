@@ -12,17 +12,34 @@ def compute_annualized_return(serie):
     end_date = serie.index[-1]
     years_elapsed = (end_date - start_date).days / 365.25  # Account for leap years
     annualized_return = ((1 + total_return)**(1/years_elapsed) - 1) * 100
+    
+    
     return annualized_return
 
 def compute_cvar(serie, alpha=0.95, tf=365):
     '''
     Calculates the ex post CVAR of a serie.
+    For annual rebalancing, calculates annual returns between periods.
     '''
-    cvar = serie.pct_change(tf).dropna().sort_values()
-    var = np.percentile(cvar, 100 - 100*alpha)
-    cvar = cvar[cvar<=var]
-    cvar = cvar.mean() 
-    cvar = -100 * cvar
+    # Calculate period returns (annual for rebalancing)
+    if len(serie) <= 1:
+        return 0.0  # Cannot calculate CVaR with insufficient data
+    
+    # Calculate returns between consecutive periods
+    returns = serie.pct_change().dropna()
+    
+    if len(returns) == 0:
+        return 0.0  # No returns to calculate CVaR
+    
+    returns_sorted = returns.sort_values()
+    var = np.percentile(returns_sorted, (1 - alpha) * 100)
+    cvar_values = returns_sorted[returns_sorted <= var]
+    
+    if len(cvar_values) == 0:
+        return 0.0  # No values in tail
+        
+    cvar = cvar_values.mean() 
+    cvar = -100 * cvar  # Convert to positive percentage
     return cvar
         
 def compute_mean_hhi(portfolios):

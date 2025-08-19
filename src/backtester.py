@@ -123,6 +123,7 @@ class Backtester():
     def backtest_portfolios(self, historical_portfolios):
         '''
         Given a historical portfolio and the total returns, computes the performance backtest.
+        Uses proper annual rebalancing: calculates returns between rebalancing periods.
         '''
         print('running backtest performance')
         backtests = {}
@@ -130,18 +131,34 @@ class Backtester():
             print(f"    {model.name}")
             backtests[model.name] = {}
             portfolios = historical_portfolios[model.name]
-            backtest = portfolios.reindex(self.asset_prices.index)
-            backtest = backtest.fillna(method='ffill').dropna()
-            backtest /= 100  # Convert portfolio weights from percentage to fractional
-            returns = self.asset_prices.pct_change()
-            returns = returns.reindex(backtest.index)
-            backtest *= returns
-            backtest = backtest.sum(axis=1)
-            backtest.iloc[0] = 0
-            backtest += 1
-            backtest = backtest.cumprod()
-            backtest *= 100
-            backtests[model.name]['total_return_serie'] = backtest
+            
+            # Convert portfolio weights from percentage to fractional
+            portfolios_frac = portfolios / 100
+            
+            # Calculate portfolio performance using period returns between rebalancing dates
+            portfolio_values = pd.Series(index=portfolios.index, dtype=float)
+            portfolio_values.iloc[0] = 100  # Starting value of 100
+            
+            for i in range(len(portfolios.index) - 1):
+                current_date = portfolios.index[i]
+                next_date = portfolios.index[i + 1]
+                
+                # Get asset prices at start and end of period
+                start_prices = self.asset_prices.loc[current_date]
+                end_prices = self.asset_prices.loc[next_date]
+                
+                # Calculate period returns for each asset
+                period_returns = (end_prices / start_prices) - 1
+                
+                # Apply portfolio weights to get portfolio return for this period
+                portfolio_weights = portfolios_frac.loc[current_date]
+                portfolio_return = (portfolio_weights * period_returns).sum()
+                
+                
+                # Calculate portfolio value at end of period
+                portfolio_values.iloc[i + 1] = portfolio_values.iloc[i] * (1 + portfolio_return)
+            
+            backtests[model.name]['total_return_serie'] = portfolio_values
             backtests[model.name]['portfolios'] = portfolios
         return backtests
     

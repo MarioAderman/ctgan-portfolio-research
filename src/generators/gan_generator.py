@@ -19,10 +19,10 @@ class CTGANGenerator():
         self.asset_returns = asset_returns
         self.features = features
         self.name = 'CTGAN'
-        self.params = params if params else {'embedding_dim': 128,
-                           'generator_dim': (256, 256),
-                           'discriminator_dim': (256, 256),
-                           'epochs': 10,
+        self.params = params if params else {'embedding_dim': 32,
+                           'generator_dim': (64, 64),
+                           'discriminator_dim': (64, 64),
+                           'epochs': 5,
                            'generator_lr': 1e-4,
                            'discriminator_lr': 1e-4}
 

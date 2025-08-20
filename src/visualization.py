@@ -36,7 +36,9 @@ class PortfolioVisualizer:
         
         if save_path:
             plt.savefig(f'{save_path}/portfolio_allocations_{model_name}.png', dpi=300, bbox_inches='tight')
-        plt.show()
+        else:
+            plt.show()
+        plt.close()
     
     def plot_cumulative_returns(self, save_path=None):
         """
@@ -59,7 +61,9 @@ class PortfolioVisualizer:
         
         if save_path:
             plt.savefig(f'{save_path}/cumulative_returns.png', dpi=300, bbox_inches='tight')
-        plt.show()
+        else:
+            plt.show()
+        plt.close()
     
     def plot_risk_metrics_comparison(self, save_path=None):
         """
@@ -116,7 +120,9 @@ class PortfolioVisualizer:
         
         if save_path:
             plt.savefig(f'{save_path}/risk_metrics_comparison.png', dpi=300, bbox_inches='tight')
-        plt.show()
+        else:
+            plt.show()
+        plt.close()
     
     def plot_allocation_heatmap(self, model_name, save_path=None):
         """
@@ -153,7 +159,9 @@ class PortfolioVisualizer:
         
         if save_path:
             plt.savefig(f'{save_path}/allocation_heatmap_{model_name}.png', dpi=300, bbox_inches='tight')
-        plt.show()
+        else:
+            plt.show()
+        plt.close()
     
     def plot_equal_weight_comparison(self, save_path=None):
         """
@@ -182,7 +190,9 @@ class PortfolioVisualizer:
         
         if save_path:
             plt.savefig(f'{save_path}/equal_weight_comparison.png', dpi=300, bbox_inches='tight')
-        plt.show()
+        else:
+            plt.show()
+        plt.close()
     
     def create_summary_dashboard(self, save_path=None):
         """

@@ -59,7 +59,7 @@ class UryasevOptimization():
                         # z non-negativity
                         elif i in range(1 + J, 1 + J + J):
                                 b[i] = 0
-                                if k in range(1 + n, 1 + n + J) and (i-(1 + J + 1 + 2*n))==(k - (1 + n)):
+                                if k in range(1 + n, 1 + n + J) and (i-(1 + J))==(k - (1 + n)):
                                         A[i,k] = -1
                         # 100% max investment (non-leveraged fund)
                         elif i in range(1 + J + J, 1 + J + J + 1):
@@ -68,6 +68,11 @@ class UryasevOptimization():
                                         A[i,k] = 1
         # solve the problem
         optimal_result = linprog(c, A_ub=A, b_ub=b, bounds=v, options={"disp": False})
+        
+        # Debug: Check if CVaR constraint is binding
+        if not optimal_result.success:
+            print(f"Optimization failed: {optimal_result.message}")
+        
         optimal_portfolio = optimal_result.x[1:n+1]
         optimal_portfolio = pd.Series(optimal_portfolio)
         # remove scraps

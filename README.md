@@ -1,8 +1,43 @@
-# CTGAN-portfolio-research
-Colab research between Arturo Cifuentes, Domingo Ramirez &amp; Fintual AGF.
+# CTGAN Portfolio Optimization - Extended Research
 
-Notebook with running example can be found [here](https://colab.research.google.com/drive/1MGgLu66FfDMpFQjNZuOK6z13eFikuz8x).
+**An extended investigation and implementation of CTGAN-based portfolio optimization methodologies.**
 
-Preprint can be found [here](https://arxiv.org/abs/2302.02269) and [here](https://www.researchgate.net/publication/368288208_A_Modified_CTGAN-Plus-Features_Based_Method_for_Optimal_Asset_Allocation)
+## About This Project
 
-Short article explaining the methodology and findings over [here](https://fintualist.com/chile/alpha/primer-articulo-de-investigacion-en-fintual-inversiones/?utm_source=intercom&utm_medium=email&utm_campaign=fintualist112) 
+This repository represents a further investigation and enhancement of the CTGAN portfolio optimization approach, building upon the foundational work and methodologies established by the original research team.
+
+### Original Research Credit
+
+**Original Authors**: Arturo Cifuentes, Domingo Ramirez & Fintual AGF
+
+**Original Repository**: [chuma9615/ctgan-portfolio-research](https://github.com/chuma9615/ctgan-portfolio-research)
+
+**Original Research Resources**:
+- **Colab Notebook**: [Running Example](https://colab.research.google.com/drive/1MGgLu66FfDMpFQjNZuOK6z13eFikuz8x)
+- **Research Papers**:
+  - [arXiv Preprint](https://arxiv.org/abs/2302.02269)
+  - [ResearchGate Publication](https://www.researchgate.net/publication/368288208_A_Modified_CTGAN-Plus-Features_Based_Method_for_Optimal_Asset_Allocation)
+- **Article**: [Fintual Research Explanation](https://fintualist.com/chile/alpha/primer-articulo-de-investigacion-en-fintual-inversiones/?utm_source=intercom&utm_medium=email&utm_campaign=fintualist112)
+
+### Enhanced Implementation Features
+
+This extended research includes several key improvements and investigations:
+
+- **CVaR Constraint Optimization**: Deep investigation into Conditional Value at Risk constraint calibration and its impact on portfolio diversification
+- **Enhanced Visualizations**: Comprehensive portfolio performance dashboards with allocation tracking and concentration analysis
+- **Performance Improvements**: Optimized backtesting methodology with proper annual rebalancing and feature-weighted scenario generation
+- **Hacker-Style Progress Display**: Professional terminal interface with real-time progress tracking, ETA calculations, and colorized output
+- **Modular Architecture**: Clean separation of concerns with dedicated generators, optimization, and visualization modules
+- **Comprehensive Metrics**: HHI concentration index, portfolio rotation metrics, and ex-post CVaR analysis
+
+### Research Focus
+
+This investigation particularly focuses on:
+1. **Portfolio Concentration Issues**: Solving extreme allocation concentration through proper CVaR constraint calibration
+2. **Methodology Validation**: Comparing implementation results against paper benchmarks
+3. **CTGAN vs Historical Sampling**: Detailed comparative analysis of synthetic vs bootstrap sampling approaches
+4. **Feature Integration**: Optimal use of yield curve features for scenario weighting
+
+---
+
+*This project extends and builds upon the excellent foundational research by Cifuentes, Ramirez & Fintual AGF. All credit for the original CTGAN portfolio optimization methodology goes to the original research team.* 

@@ -7,6 +7,7 @@ from src.generators.gan_generator import CTGANGenerator
 from src.metrics import compute_annualized_return, compute_cvar, compute_mean_hhi, compute_mean_rotation
 from src.uryasev_optimization import UryasevOptimization
 from src.utils import zscore_euclidean
+from src.progress_display import HackerProgressDisplay
 
 
 class Backtester():
@@ -19,6 +20,7 @@ class Backtester():
         self.config = config
         self.rebalance_dates = rebalance_dates
         self.features = features
+        self.progress = HackerProgressDisplay()
         self.lookback_years = config['lookback_years']
         self.generators = self._instanciate_generators(config['model_names'])
         self.cvar = config['cvar']
@@ -49,22 +51,28 @@ class Backtester():
         '''
         Generates the samples for each rebalance date and for each model.
         '''
-        print('generating samples:')
+        total_steps = len(self.rebalance_dates) * len(self.generators)
+        self.progress.start_phase("SAMPLE GENERATION", total_steps)
+        
         # for each date and model we generate samples and store them in a dictionary
         samples = {}
         for rebalance_date in self.rebalance_dates:
         
             start_date, end_date = self._get_start_end_dates(rebalance_date)
             samples[rebalance_date] = {}
-            print('    ' + str(rebalance_date.date()))
 
             for generator in self.generators:
-                print(f"    {generator.name}: ")
+                self.progress.update_progress(
+                    current_date=rebalance_date, 
+                    model_name=generator.name,
+                    sub_task="Generating scenarios"
+                )
                 sample = generator.generate_sample(sample_size=self.config['sample_size'],
                                                 start_date=start_date,
                                                 end_date=end_date)
                 samples[rebalance_date][generator.name] = sample
 
+        self.progress.complete_phase()
         return samples
 
     def _get_start_end_dates(self, rebalance_date):
@@ -82,18 +90,22 @@ class Backtester():
         '''
         Given the samples, runs a uryasev optimisation for each rebalance date and model.
         '''
+        total_steps = len(self.generators) * len(rebalance_dates)
+        self.progress.start_phase("PORTFOLIO OPTIMIZATION", total_steps)
 
-        print('running backtest optimizations:')
         # initialize optimitazion object
         uryasev_optimization = UryasevOptimization(alpha=alpha, cvar=cvar, bounds=bounds)
         portfolios = {}
         # for each date and model run an optimization problem
         for model in self.generators:
-            print(f"    {model.name}: ")
             portfolios[model.name] = {}
             model_portfolios = pd.DataFrame(columns=self.asset_returns.columns)
             for rebalance_date in rebalance_dates:
-                print(f"        {str(rebalance_date.date())}")
+                self.progress.update_progress(
+                    current_date=rebalance_date,
+                    model_name=model.name,
+                    sub_task="CVaR optimization"
+                )
                 sample = samples[rebalance_date][model.name]
                 if self.features is not None:
                     density = self.compute_density(sample, rebalance_date)
@@ -108,6 +120,7 @@ class Backtester():
                 model_portfolios.loc[rebalance_date] = portfolio
                 portfolios[model.name] = model_portfolios
 
+        self.progress.complete_phase()
         return portfolios
     
     def compute_density(self, sample, rebalance_date):
@@ -127,10 +140,15 @@ class Backtester():
         Given a historical portfolio and the total returns, computes the performance backtest.
         Uses proper annual rebalancing: calculates returns between rebalancing periods.
         '''
-        print('running backtest performance')
+        total_steps = len(self.generators)
+        self.progress.start_phase("PERFORMANCE CALCULATION", total_steps)
+        
         backtests = {}
         for model in self.generators:
-            print(f"    {model.name}")
+            self.progress.update_progress(
+                model_name=model.name,
+                sub_task="Computing returns"
+            )
             backtests[model.name] = {}
             portfolios = historical_portfolios[model.name]
             
@@ -162,6 +180,8 @@ class Backtester():
             
             backtests[model.name]['total_return_serie'] = portfolio_values
             backtests[model.name]['portfolios'] = portfolios
+        
+        self.progress.complete_phase()
         return backtests
     
     def compute_metrics(self, backtests):

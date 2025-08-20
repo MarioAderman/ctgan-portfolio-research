@@ -117,6 +117,8 @@ class Backtester():
         # use zscore normalized euclidean
         distances = 1 / zscore_euclidean(spot_feature, sampled_features)
         density = distances / distances.sum()
+        
+        
         return density.values
 
 

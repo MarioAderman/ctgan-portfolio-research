@@ -79,6 +79,7 @@ class UryasevOptimization():
         optimal_portfolio[optimal_portfolio<0.01] = 0
         optimal_portfolio /= optimal_portfolio.sum()
         optimal_portfolio *= 100
+        
         return optimal_portfolio
 
     

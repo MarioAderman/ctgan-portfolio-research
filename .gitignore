@@ -2,3 +2,7 @@ __pycache__/
 *.pyc
 charts/
 *.png
+CLAUDE.md
+DEVELOPMENT.md
+GEMINI.md
+PAPER.md

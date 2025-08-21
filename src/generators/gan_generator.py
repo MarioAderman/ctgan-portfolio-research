@@ -4,6 +4,7 @@ import warnings
 # Third party imports
 import hdbscan
 import pandas as pd
+import torch
 from sdv.tabular import CTGAN
 from sklearn.decomposition import PCA
 from sklearn.manifold import TSNE
@@ -13,21 +14,84 @@ from src.generators.normalizer import Normalizer
 
 warnings.filterwarnings("ignore")
 
+def _select_optimal_cuda_setting(sample_size, epochs, features_count):
+    """
+    Intelligently select CUDA vs CPU based on hardware and dataset characteristics.
+    
+    Args:
+        sample_size: Number of samples to generate
+        epochs: Number of training epochs
+        features_count: Number of features in dataset
+        
+    Returns:
+        bool: True to use CUDA, False to use CPU
+    """
+    if not torch.cuda.is_available():
+        return False
+    
+    # Get GPU information
+    gpu_name = torch.cuda.get_device_name(0).lower()
+    
+    # Calculate computational complexity score
+    compute_score = sample_size * epochs * features_count
+    
+    # Hardware-specific thresholds based on empirical testing
+    if 'gtx 1050' in gpu_name or 'gtx 1060' in gpu_name:
+        # Lower-end GPUs: CPU often faster for small datasets
+        threshold = 50000  # Conservative threshold
+    elif 'rtx' in gpu_name or 'gtx 1080' in gpu_name or 'tesla' in gpu_name:
+        # Higher-end GPUs: More aggressive CUDA usage
+        threshold = 10000
+    else:
+        # Unknown GPU: Conservative approach
+        threshold = 30000
+    
+    use_cuda = compute_score > threshold
+    
+    # Log the decision for transparency
+    print(f"🔧 Hardware: {torch.cuda.get_device_name(0)}")
+    print(f"📊 Compute score: {compute_score} (threshold: {threshold})")
+    print(f"⚡ Selected: {'CUDA' if use_cuda else 'CPU'} for optimal performance")
+    
+    return use_cuda
+
 class CTGANGenerator():
 
     def __init__(self, asset_returns, params=None, features=None):
         self.asset_returns = asset_returns
         self.features = features
         self.name = 'CTGAN'
-        self.params = params if params else {'embedding_dim': 32,
-                           'generator_dim': (64, 64),
-                           'discriminator_dim': (64, 64),
-                           'epochs': 5,
-                           'generator_lr': 1e-4,
-                           'discriminator_lr': 1e-4}
+        
+        # Default parameters with intelligent CUDA selection
+        default_params = {
+            'embedding_dim': 32,
+            'generator_dim': (64, 64),
+            'discriminator_dim': (64, 64),
+            'epochs': 5,
+            'generator_lr': 1e-4,
+            'discriminator_lr': 1e-4,
+            'verbose': False
+        }
+        
+        if params:
+            self.params = params
+        else:
+            # Intelligent CUDA selection will be done when we know dataset size
+            self.params = default_params
 
 
     def generate_sample(self, sample_size, start_date, end_date):
+        # Intelligent CUDA selection if not explicitly set
+        if 'cuda' not in self.params:
+            features_count = len(self.asset_returns.columns)
+            if self.features is not None:
+                features_count += len(self.features.columns)
+            
+            self.params['cuda'] = _select_optimal_cuda_setting(
+                sample_size=sample_size,
+                epochs=self.params['epochs'],
+                features_count=features_count
+            )
 
         model = CTGAN(**self.params)
         returns_interval = self.asset_returns.loc[

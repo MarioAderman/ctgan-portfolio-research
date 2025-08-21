@@ -17,7 +17,7 @@ class HistoricalGenerator():
     def generate_sample(self, sample_size, start_date, end_date, normalize_features=False):
         asset_returns_interval = self.asset_returns.loc[(self.asset_returns.index <= end_date)&(self.asset_returns.index >= start_date)]
         if self.features is not None:
-            asset_returns_interval = asset_returns_interval.join(self.features, how='left').fillna(method='ffill')
+            asset_returns_interval = asset_returns_interval.join(self.features, how='left').ffill()
 
         if normalize_features:
             normalizer = Normalizer()

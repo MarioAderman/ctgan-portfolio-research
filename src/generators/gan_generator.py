@@ -36,7 +36,7 @@ class CTGANGenerator():
         normalizer = None
         
         if self.features is not None:
-            returns_interval = returns_interval.join(self.features, how='left').fillna(method='ffill')
+            returns_interval = returns_interval.join(self.features, how='left').ffill()
             normalizer = Normalizer()
             returns_interval = normalizer.normalize(returns_interval)
             fit_cols = list(self.asset_returns.columns) + list(self.features.columns) + ['cluster']

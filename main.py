@@ -1,5 +1,10 @@
 # Standard library imports
 import json
+import warnings
+
+# Suppress specific deprecation warnings from external libraries
+warnings.filterwarnings("ignore", category=FutureWarning, module="rdt")
+warnings.filterwarnings("ignore", category=UserWarning, module="joblib")
 
 # Local application imports
 from src.backtester import Backtester

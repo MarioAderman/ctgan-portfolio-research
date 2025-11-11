@@ -6,3 +6,7 @@ CLAUDE.md
 DEVELOPMENT.md
 GEMINI.md
 PAPER.md
+.env
+.claude/
+package-lock.json
+src/data/*_alpaca.csv

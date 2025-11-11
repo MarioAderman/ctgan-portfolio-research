@@ -38,6 +38,54 @@ This investigation particularly focuses on:
 3. **CTGAN vs Historical Sampling**: Detailed comparative analysis of synthetic vs bootstrap sampling approaches
 4. **Feature Integration**: Optimal use of yield curve features for scenario weighting
 
+## Setup and Installation
+
+### Prerequisites
+- Python 3.8+ (tested with Python 3.8)
+- conda (recommended) or virtualenv
+- CUDA-capable GPU (optional, for accelerated training)
+
+### Installation Steps
+
+1. **Clone the repository**:
+   ```bash
+   git clone https://github.com/your-username/ctgan-portfolio-research.git
+   cd ctgan-portfolio-research
+   ```
+
+2. **Create and activate conda environment**:
+   ```bash
+   conda create -n ctgan-portfolio python=3.8
+   conda activate ctgan-portfolio
+   ```
+
+3. **Install dependencies**:
+   ```bash
+   pip install -r requirements.txt
+   ```
+
+### Running the Project
+
+**Execute the main optimization pipeline**:
+```bash
+python main.py
+```
+
+This will:
+- Load and preprocess asset price data
+- Train the CTGAN model for synthetic scenario generation
+- Run portfolio optimization with CVaR constraints
+- Generate comprehensive visualizations and performance metrics
+- Output results with hacker-style progress tracking
+
+### Project Structure
+
+- `main.py` - Main execution script
+- `src/` - Core implementation modules
+- `src/data/` - Data files and preprocessing
+- `src/generators/` - CTGAN and historical data generators
+- `requirements.txt` - Python dependencies
+
 ---
 
 *This project extends and builds upon the excellent foundational research by Cifuentes, Ramirez & Fintual AGF. All credit for the original CTGAN portfolio optimization methodology goes to the original research team.* 
